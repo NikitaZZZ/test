@@ -1,4 +1,4 @@
-# Еest task for Darall
+# Test task for Darall
 
 ## Project setup
 ```
