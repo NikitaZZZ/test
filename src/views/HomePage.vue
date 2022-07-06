@@ -9,8 +9,6 @@
   <label class="form-label">Категория блюда</label>
 
   <div class="d-block mb-3" role="group">
-    <button type="button" class="btn btn-primary all-categories" @click="reload">Все</button>
-
     <sortBtn
       v-for="category in categories"
       :key="category"
@@ -19,7 +17,12 @@
     />
   </div>
 
-  <dishMenu v-for="dish in dishes" :key="dish.title" :dishContent="dish" @click="upd(dish.id)">
+  <dishMenu
+    v-for="dish in dishes"
+    :key="dish.title"
+    :dishContent="dish"
+    @click="updateCurrentIdEditedDish(dish.id)"
+  >
   </dishMenu>
 
   <div class="modal fade" id="modal-upd">
@@ -92,7 +95,7 @@ export default {
       dishes: [
         {
           title: 'Цезарь',
-          category: 'Салаты',
+          category: 'Супы',
           imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
           compound:
             'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
@@ -100,7 +103,7 @@ export default {
         },
         {
           title: 'Гурме',
-          category: 'Супы',
+          category: 'Салаты',
           imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
           compound:
             'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
@@ -108,33 +111,7 @@ export default {
         },
         {
           title: 'Греческий',
-          category: 'Салаты',
-          imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
-          compound:
-            'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
-          id: 2,
-        },
-      ],
-      dishesCopy: [
-        {
-          title: 'Цезарь',
-          category: 'Салаты',
-          imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
-          compound:
-            'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
-          id: 0,
-        },
-        {
-          title: 'Гурме',
           category: 'Супы',
-          imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
-          compound:
-            'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
-          id: 1,
-        },
-        {
-          title: 'Греческий',
-          category: 'Салаты',
           imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
           compound:
             'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
@@ -164,29 +141,13 @@ export default {
         compound: this.dishCreate.compound,
         id: this.dishes.length,
       });
-
-      this.dishesCopy.push({
-        title: this.dishCreate.title,
-        category: this.dishCreate.category,
-        compound: this.dishCreate.compound,
-        id: this.dishes.length,
-      });
     },
 
     sortDish(categoryDish) {
-      this.reload();
-
-      this.dishes = this.dishes.filter((dish) => categoryDish === dish.category);
+      this.dishes = this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
     },
 
-    reload() {
-      this.dishes = [];
-      for (const dish of this.dishesCopy) {
-        this.dishes.push(dish);
-      }
-    },
-
-    upd(dishId) {
+    updateCurrentIdEditedDish(dishId) {
       this.dishUpdate.id = dishId;
     },
 
@@ -203,10 +164,6 @@ export default {
         this.dishUpdate.compound == ''
           ? this.dishes[this.dishUpdate.id].compound
           : this.dishUpdate.compound;
-
-      this.dishesCopy[this.dishUpdate.id].title = this.dishUpdate.title;
-      this.dishesCopy[this.dishUpdate.id].category = this.dishUpdate.category;
-      this.dishesCopy[this.dishUpdate.id].compound = this.dishUpdate.compound;
     },
   },
 };
