@@ -13,13 +13,13 @@
       v-for="category in categories"
       :key="category"
       :category="category"
-      @click="sortDish(category)"
+      :eventClick="sortDish(category)"
     />
   </div>
 
   <dishMenu
     v-for="dish in dishes"
-    :key="dish.title"
+    :key="dish.id"
     :dishContent="dish"
     @click="updateCurrentIdEditedDish(dish.id)"
   >
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import formDish from '../components/formDish.vue';
 import dishMenu from '../components/dishMenu.vue';
 import sortBtn from '../components/sortBtn.vue';
@@ -134,8 +135,8 @@ export default {
   },
 
   methods: {
-    createDish() {
-      this.dishes.push({
+    async createDish() {
+      await axios.post('http://localhost:5000/createDish', {
         title: this.dishCreate.title,
         category: this.dishCreate.category,
         compound: this.dishCreate.compound,
@@ -144,7 +145,7 @@ export default {
     },
 
     sortDish(categoryDish) {
-      this.dishes = this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
+      this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
     },
 
     updateCurrentIdEditedDish(dishId) {
@@ -152,19 +153,13 @@ export default {
     },
 
     updateInfoDish() {
-      this.dishes[this.dishUpdate.id].title =
-        this.dishUpdate.title == '' ? this.dishes[this.dishUpdate.id].title : this.dishUpdate.title;
-
-      this.dishes[this.dishUpdate.id].category =
-        this.dishUpdate.category == ''
-          ? this.dishes[this.dishUpdate.id].category
-          : this.dishUpdate.category;
-
-      this.dishes[this.dishUpdate.id].compound =
-        this.dishUpdate.compound == ''
-          ? this.dishes[this.dishUpdate.id].compound
-          : this.dishUpdate.compound;
+      this.dishes[this.dishUpdate.id] = this.dishUpdate;
+      axios.put('http://localhost:5000/updateDish', this.dishes[this.dishUpdate.id]);
     },
+  },
+
+  mounted() {
+    axios.get('http://localhost:5000/getDishes').then((resp) => (this.dishes = resp.data.rows));
   },
 };
 </script>
