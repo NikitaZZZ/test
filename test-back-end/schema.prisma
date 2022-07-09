@@ -1,15 +1,16 @@
 datasource db {
   provider = "postgresql"
-  url      = env("postgres://postgres:postgrespw@localhost:55002")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
-model Dish {
+model dishes {
   id Int @id @default(autoincrement())
   title String
   category String
   compound String
+  image String
 }

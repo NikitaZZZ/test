@@ -30,6 +30,12 @@
         placeholder="Напишите сюда состав блюда"
       />
     </div>
+    <div class="mb-3">
+      <label class="form-label">Изображение</label>
+      <form enctype="multipart/form-data">
+        <input type="file" ref="file" @change="$emit('update:file', $event.target.value)" />
+      </form>
+    </div>
 
     <div class="mb-3">
       <div class="mt-3 mb-3">

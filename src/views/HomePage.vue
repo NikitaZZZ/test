@@ -3,6 +3,7 @@
     v-model:title="dishCreate.title"
     v-model:category="dishCreate.category"
     v-model:compound="dishCreate.compound"
+    @change="selectFile"
     :eventClick="createDish"
   />
 
@@ -92,39 +93,14 @@ export default {
         id: 0,
       },
 
-      categories: ['Салаты', 'Супы', 'Бургеры', 'Паста'],
-      dishes: [
-        {
-          title: 'Цезарь',
-          category: 'Супы',
-          imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
-          compound:
-            'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
-          id: 0,
-        },
-        {
-          title: 'Гурме',
-          category: 'Салаты',
-          imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
-          compound:
-            'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
-          id: 1,
-        },
-        {
-          title: 'Греческий',
-          category: 'Супы',
-          imgSrc: 'https://s1.eda.ru/StaticContent/Photos/120131082454/161109234550/p_O.jpg',
-          compound:
-            'Зеленый салат, помидоры, куриное филе, белый хлеб, соус "Цезарь", сливочное масло, чеснок, сыр пармезан',
-          id: 2,
-        },
-      ],
-
       dishCreate: {
         title: '',
         compound: '',
         category: '',
       },
+
+      categories: ['Салаты', 'Супы', 'Бургеры', 'Паста'],
+      dishes: [],
     };
   },
 
@@ -135,31 +111,75 @@ export default {
   },
 
   methods: {
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
+
+    selectFile(e) {
+      if (e.target.files != null) {
+        const [image] = e.target.files;
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+
+        this.getBase64(image).then((data) => (this.dishCreate.image = data));
+      }
+    },
+
     async createDish() {
       await axios.post('http://localhost:5000/createDish', {
         title: this.dishCreate.title,
         category: this.dishCreate.category,
         compound: this.dishCreate.compound,
-        id: this.dishes.length,
+        image: this.dishCreate.image,
       });
     },
 
     sortDish(categoryDish) {
-      this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
+      try {
+        this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
+      } catch {
+        console.log('ok');
+      }
     },
 
     updateCurrentIdEditedDish(dishId) {
       this.dishUpdate.id = dishId;
     },
 
-    updateInfoDish() {
-      this.dishes[this.dishUpdate.id] = this.dishUpdate;
-      axios.put('http://localhost:5000/updateDish', this.dishes[this.dishUpdate.id]);
+    async updateInfoDish() {
+      this.dishes[this.dishUpdate.id] = {
+        title:
+          this.dishUpdate.title != ''
+            ? this.dishUpdate.title
+            : this.dishes[this.dishUpdate.id].title,
+        compound:
+          this.dishUpdate.compound != ''
+            ? this.dishUpdate.compound
+            : this.dishes[this.dishUpdate.id].compound,
+        category:
+          this.dishUpdate.category != ''
+            ? this.dishUpdate.category
+            : this.dishes[this.dishUpdate.id].category,
+        id: this.dishUpdate.id,
+      };
+
+      await axios
+        .put('http://localhost:5000/updateDish', this.dishes[this.dishUpdate.id])
+        .then(() => {
+          location.reload();
+        });
     },
   },
 
   mounted() {
-    axios.get('http://localhost:5000/getDishes').then((resp) => (this.dishes = resp.data.rows));
+    axios
+      .get('http://localhost:5000/getDishes')
+      .then((resp) => console.log((this.dishes = resp.data)));
   },
 };
 </script>

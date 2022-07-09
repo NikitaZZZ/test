@@ -1,65 +1,63 @@
 import express from 'express';
 import cors from 'cors';
+import { PrismaClient } from '@prisma/client';
+import fileUpload from 'express-fileUpload';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
+
+const prisma = new PrismaClient();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
 const port = 5000;
-import pkg from 'pg';
-const { Pool } = pkg;
-
-const pool = new Pool({
-  user: 'postgres',
-  host: 'host.docker.internal',
-  database: 'test',
-  password: 'postgrespw',
-  dialect: 'postgres',
-  port: 55002,
-});
-
-//Database connection and also please create postgres database first
-pool.connect((err, client, release) => {
-  if (err) {
-    return console.error('Error acquiring client', err.stack);
-  }
-
-  client.query('SELECT NOW()', (err, result) => {
-    release();
-
-    if (err) {
-      return console.error('Error executing query', err.stack);
-    }
-
-    console.log('Connected to Database!');
-  });
-});
 
 app.post('/createDish', async (req, res) => {
-  const { title, category, compound, id } = req.body;
+  const { title, category, compound, image, id } = req.body;
 
-  pool.query(
-    'INSERT INTO dishes (title, category, compound, id) VALUES ($1, $2, $3, $4) RETURNING *',
-    [title, category, compound, id],
-  );
+  const result = await prisma.dishes.create({
+    data: {
+      title,
+      category,
+      compound,
+      image,
+      id,
+    },
+  });
+
+  res.json(result);
 });
 
 app.put('/updateDish', async (req, res) => {
   const { title, category, compound, id } = req.body;
 
-  pool.query('UPDATE dishes SET title = $1, category = $2, compound = $3, id = $4 WHERE id = $4', [
-    title,
-    category,
-    compound,
-    id,
-  ]);
+  try {
+    const dish = await prisma.dishes.update({
+      where: { id: Number(id) },
+      data: {
+        title: title,
+        category: category,
+        compound: compound,
+      },
+    });
+
+    res.json(dish);
+  } catch (error) {
+    res.json({ error: `Post with ID ${id} does not exist in the database` });
+  }
 });
 
 app.get('/getDishes', async (req, res) => {
-  const dishes = await pool.query('SELECT * FROM dishes');
+  try {
+    const dishes = await prisma.dishes.findMany();
 
-  res.json(dishes);
+    res.json(dishes);
+  } catch {
+    console.log('there is no dishes');
+  }
 });
 
 app.listen(port, () => {
