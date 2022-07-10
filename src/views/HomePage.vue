@@ -125,20 +125,16 @@ export default {
     },
 
     async createDish() {
-      await axios.post('http://localhost:5000/createDish', {
+      await axios.post('http://localhost:5000/createDish/', {
         title: this.dishCreate.title,
         category: this.dishCreate.category,
         compound: this.dishCreate.compound,
         image: this.dishCreate.image,
-      });
+      }).then(() => location.reload());
     },
 
     sortDish(categoryDish) {
-      try {
         this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
-      } catch {
-        console.log('ok');
-      }
     },
 
     updateCurrentIdEditedDish(dishId) {
@@ -163,7 +159,7 @@ export default {
       };
 
       await axios
-        .put('http://localhost:5000/updateDish', this.dishes[this.dishUpdate.id])
+        .put('http://localhost:5000/updateDish/', this.dishes[this.dishUpdate.id])
         .then(() => {
           location.reload();
         });
@@ -172,8 +168,8 @@ export default {
 
   mounted() {
     axios
-      .get('http://localhost:5000/getDishes')
-      .then((resp) => console.log((this.dishes = resp.data)));
+      .get('http://localhost:5000/getDishes/')
+      .then((resp) => this.dishes = resp.data);
   },
 };
 </script>

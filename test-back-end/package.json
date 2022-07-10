@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "npx ts-node server.ts"
+    "build": "npx tsc",
+    "serve": "node server.js"
   },
   "keywords": [
     "nodejs",

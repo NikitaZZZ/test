@@ -23,8 +23,8 @@ app.use(
   }),
 );
 
-app.use('/createDish', createDishRouter);
-app.use('/updateDish', updateDishRouter);
-app.use('/getDishes', getDishesRouter);
+app.use('/', createDishRouter);
+app.use('/', updateDishRouter);
+app.use('/', getDishesRouter);
 
 app.listen(PORT, () => console.log(`Server running on post ${PORT}`));
