@@ -111,22 +111,16 @@ export default {
   },
 
   methods: {
-    getBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-      });
-    },
-
     selectFile(e) {
       if (e.target.files != null) {
-        const [image] = e.target.files;
-        const reader = new FileReader();
-        reader.readAsDataURL(image);
+        const image = e.target.files[0];
+        const fr = new FileReader();
 
-        this.getBase64(image).then((data) => (this.dishCreate.image = data));
+        fr.onload = (e) => {
+          this.dishCreate.image = e.target.result;
+        };
+
+        fr.readAsDataURL(image);
       }
     },
 

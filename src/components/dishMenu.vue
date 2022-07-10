@@ -1,6 +1,6 @@
 <template>
   <div class="card dish" style="width: 18rem">
-    <img :src="dishContent.image.file" class="card-img-top" />
+    <img :src="dishContent.image" class="card-img-top" />
     <div class="card-body">
       <h5 class="card-title">
         {{ dishContent.title }}
