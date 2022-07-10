@@ -14,7 +14,7 @@
       v-for="category in categories"
       :key="category"
       :category="category"
-      :eventClick="sortDish(category)"
+      @click="sortDish(category)"
     />
   </div>
 
@@ -134,7 +134,7 @@ export default {
     },
 
     sortDish(categoryDish) {
-        this.dishes.sort((dish) => (dish.category == categoryDish ? -1 : 1));
+        this.dishes.sort((dish) => (dish.category.toLowerCase() == categoryDish.toLowerCase() ? -1 : 1));
     },
 
     updateCurrentIdEditedDish(dishId) {
