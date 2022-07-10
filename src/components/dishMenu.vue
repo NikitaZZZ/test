@@ -17,9 +17,6 @@
 <script>
 export default {
   name: 'dishMenu',
-  model: {
-    prop: 'eventUpdate',
-  },
   props: {
     dishContent: {
       type: Object,
