@@ -3,16 +3,16 @@
 - Editing dishes
 
 Stack:
-  Front-End:
-    Vue 3
-    Axios
-    Bootstrap 5
-  Back-End:
-    Node.js 
-    TypeScript
-    Express.js
-    PostgreSQL
-    Prisma ORM
+  1. Front-End:
+    1.1 Vue 3
+    1.2. Axios
+    1.3. Bootstrap 5
+  2. Back-End:
+    2.1. Node.js 
+    2.2. TypeScript
+    2.3. Express.js
+    2.4. PostgreSQL
+    2.5. Prisma ORM
 
 ## Project setup
 ```
