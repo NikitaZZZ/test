@@ -2,17 +2,18 @@
 - Adding a dish (name, composition, picture from a computer)
 - Editing dishes
 
-Stack:
-1. Front-End:
-1.1 Vue 3
-1.2. Axios
-1.3. Bootstrap 5
-2. Back-End:
-2.1. Node.js 
-2.2. TypeScript
-2.3. Express.js
-2.4. PostgreSQL
-2.5. Prisma ORM
+## Stack:
+# Front-End:
+1. Vue 3
+2. Axios
+3. Bootstrap 5
+
+# Back-End:
+1. Node.js 
+2. TypeScript
+3. Express.js
+4. PostgreSQL
+5. Prisma ORM
 
 ## Project setup
 ```
