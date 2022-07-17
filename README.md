@@ -2,13 +2,13 @@
 - Adding a dish (name, composition, picture from a computer)
 - Editing dishes
 
-## Stack:
-# Front-End:
+# Stack:
+Front-End:
 1. Vue 3
 2. Axios
 3. Bootstrap 5
 
-# Back-End:
+Back-End:
 1. Node.js 
 2. TypeScript
 3. Express.js
